@@ -32,12 +32,11 @@ public class FontViewer extends Application {
   private StringProperty bigJavaItalic = new SimpleStringProperty("NORMAL");
 
   private Label createBigJavaLabel(){
-
-      //THIS IS A TEST
     Label label = new Label("BigJava");
-    bigJavaSize.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()),(double)newValue)));
-    bigJavaBold.addListener(((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(newValue),FontPosture.findByName(bigJavaItalic.getValue()), bigJavaSize.getValue()))));
-    bigJavaItalic.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(newValue), bigJavaSize.getValue())));
+    bigJavaSize.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(bigJavaFont.getValue(), FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()),(double)newValue)));
+    bigJavaBold.addListener(((observable, oldValue, newValue) -> label.setFont(Font.font(bigJavaFont.getValue(), FontWeight.findByName(newValue),FontPosture.findByName(bigJavaItalic.getValue()), bigJavaSize.getValue()))));
+    bigJavaItalic.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(bigJavaFont.getValue(), FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(newValue), bigJavaSize.getValue())));
+    bigJavaFont.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(newValue, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()), bigJavaSize.getValue())));
     return label;
   }
 
@@ -71,8 +70,10 @@ public class FontViewer extends Application {
   private HBox createSettingsMenu(Slider slider, CheckBox[] checkBoxes){
       HBox line_0 = new HBox(createFontSizeLabel(slider));
       line_0.setAlignment(Pos.CENTER);
-      //fontboxes
-      HBox line_1 = new HBox();
+      ComboBox fontBox = new ComboBox(FXCollections.observableArrayList("Serif", "SansSerif", "Monospaced"));
+      fontBox.setEditable(true);
+      fontBox.valueProperty().bindBidirectional(bigJavaFont);
+      HBox line_1 = new HBox(fontBox);
       line_1.setAlignment(Pos.CENTER);
       line_1.setPadding(new Insets(15.0D, 50.0D, 15.0D, 50.0D));
       HBox line_2 = new HBox(checkBoxes[0], checkBoxes[1]);
