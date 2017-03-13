@@ -35,14 +35,12 @@ public class FontViewer extends Application {
   private StringProperty bigJavaFont = new SimpleStringProperty("Arial");
   private StringProperty bigJavaBold = new SimpleStringProperty("NORMAL");
   private StringProperty bigJavaItalic = new SimpleStringProperty("NORMAL");
-  private ObjectProperty<Font> bigJavaFontFinal = new SimpleObjectProperty<Font>(Font.font(bigJavaFont.getValue(),
-          FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()), bigJavaSize.getValue()));
 
   private Label createBigJavaLabel(){
     Label label = new Label("BigJava");
-
-    label.fontProperty().bind(bigJavaFontFinal);
-
+    bigJavaSize.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()),(double)newValue)));
+    bigJavaBold.addListener(((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(newValue),FontPosture.findByName(bigJavaItalic.getValue()), bigJavaSize.getValue()))));
+    bigJavaItalic.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(newValue), bigJavaSize.getValue())));
     return label;
   }
 
@@ -159,10 +157,8 @@ public class FontViewer extends Application {
         public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
             if(newValue){
                 bigJavaBold.setValue("BOLD");
-                System.out.println(bigJavaFontFinal);
             }else{
                 bigJavaBold.setValue("NORMAL");
-                System.out.println(bigJavaFontFinal);
             }
         }
     });
