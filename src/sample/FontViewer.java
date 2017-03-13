@@ -1,22 +1,17 @@
 package sample;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,7 +20,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-import javax.swing.event.ChangeListener;
 
 public class FontViewer extends Application {
   private static final int SMALL_SIZE = 24;
@@ -38,11 +32,12 @@ public class FontViewer extends Application {
   private StringProperty bigJavaItalic = new SimpleStringProperty("NORMAL");
 
   private Label createBigJavaLabel(){
+
+      //THIS IS A TEST
     Label label = new Label("BigJava");
     bigJavaSize.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()),(double)newValue)));
     bigJavaBold.addListener(((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(newValue),FontPosture.findByName(bigJavaItalic.getValue()), bigJavaSize.getValue()))));
     bigJavaItalic.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(newValue), bigJavaSize.getValue())));
-      System.out.println("What the fuuuck");
     return label;
   }
 
