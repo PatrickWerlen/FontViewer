@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -41,6 +42,7 @@ public class FontViewer extends Application {
     bigJavaSize.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()),(double)newValue)));
     bigJavaBold.addListener(((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(newValue),FontPosture.findByName(bigJavaItalic.getValue()), bigJavaSize.getValue()))));
     bigJavaItalic.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(null, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(newValue), bigJavaSize.getValue())));
+      System.out.println("What the fuuuck");
     return label;
   }
 
