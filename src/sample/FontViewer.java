@@ -175,9 +175,6 @@ public class FontViewer extends Application {
     return menuBar;
   }
 
-  private void binder(){
-  }
-
   public void start(Stage primaryStage) throws Exception {
 
     //combobox with diffrent fonts. todo binding to menu mFace
