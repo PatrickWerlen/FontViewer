@@ -42,7 +42,6 @@ public class FontViewer extends Application {
 
   private ImageView createImage(){
     ImageView image = new ImageView(this.getClass().getResource("BigJava.jpg").toExternalForm());
-
     return image;
   }
 
