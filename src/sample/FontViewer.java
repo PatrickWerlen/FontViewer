@@ -6,7 +6,6 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.collections.ListChangeListener;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -23,10 +22,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class FontViewer extends Application {
   private static final int SMALL_SIZE = 24;
   private static final int MEDIUM_SIZE = 36;
@@ -37,8 +32,9 @@ public class FontViewer extends Application {
   private StringProperty bigJavaBold = new SimpleStringProperty("NORMAL");
   private StringProperty bigJavaItalic = new SimpleStringProperty("NORMAL");
 
-  private List<String> list = new ArrayList<String>();
-  private ObservableList<String> fontlist = FXCollections.observableArrayList(list);
+  private ObservableList<String> fontlist = FXCollections.observableArrayList("Serif", "SansSerif", "Monospaced");
+  private Menu mFace = new Menu("Face");
+  private ToggleGroup radioItemGroup = new ToggleGroup();
 
   private Label createBigJavaLabel(){
     Label label = new Label("BigJava");
@@ -77,7 +73,6 @@ public class FontViewer extends Application {
 
   private ComboBox createCombobox(){
       ComboBox combobox = new ComboBox(fontlist);
-      fontlist.addAll("Serif", "SansSerif", "Monospaced");
       combobox.setPromptText("Fonts");
       combobox.setEditable(true);
       combobox.valueProperty().bindBidirectional(bigJavaFont);
@@ -87,6 +82,7 @@ public class FontViewer extends Application {
           public void changed(ObservableValue observable, Object oldValue, Object newValue) {
               if(!combobox.getItems().contains(newValue) && javafx.scene.text.Font.getFamilies().contains(newValue)){
                   combobox.getItems().add(newValue);
+                  createRadioMenuItem(newValue.toString());
               }
           }
       });
@@ -161,8 +157,10 @@ public class FontViewer extends Application {
   private MenuBar createMenuBar(CheckBox[] checkBoxes){
     MenuBar menuBar = new MenuBar();
     Menu font = new Menu("Font");
-    Menu mFace = new Menu("Face");
     Menu mStyle = new Menu("Style");
+    for(String fonts : fontlist){
+        createRadioMenuItem(fonts);
+    }
     CheckMenuItem mBold = new CheckMenuItem("bold");
     mBold.setAccelerator(KeyCombination.keyCombination("Ctrl+B"));
     CheckMenuItem mItalic = new CheckMenuItem("italic");
@@ -198,6 +196,20 @@ public class FontViewer extends Application {
     });
 
     return menuBar;
+  }
+
+  private void createRadioMenuItem(String fonts){
+      RadioMenuItem radioMenuItem = new RadioMenuItem(fonts);
+      radioMenuItem.setToggleGroup(radioItemGroup);
+      radioMenuItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
+          @Override
+          public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+              if(newValue){
+                  bigJavaFont.setValue(radioMenuItem.getText());
+              }
+          }
+      });
+      mFace.getItems().addAll(radioMenuItem);
   }
 
   public void start(Stage primaryStage) throws Exception {
