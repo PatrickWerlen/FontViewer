@@ -3,7 +3,10 @@ package sample;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.collections.ListChangeListener;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -20,6 +23,9 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class FontViewer extends Application {
   private static final int SMALL_SIZE = 24;
@@ -30,6 +36,9 @@ public class FontViewer extends Application {
   private StringProperty bigJavaFont = new SimpleStringProperty("Arial");
   private StringProperty bigJavaBold = new SimpleStringProperty("NORMAL");
   private StringProperty bigJavaItalic = new SimpleStringProperty("NORMAL");
+
+  private List<String> list = new ArrayList<String>();
+  private ObservableList<String> fontlist = FXCollections.observableArrayList(list);
 
   private Label createBigJavaLabel(){
     Label label = new Label("BigJava");
@@ -66,13 +75,29 @@ public class FontViewer extends Application {
     return slider;
   }
 
+  private ComboBox createCombobox(){
+      ComboBox combobox = new ComboBox(fontlist);
+      fontlist.addAll("Serif", "SansSerif", "Monospaced");
+      combobox.setPromptText("Fonts");
+      combobox.setEditable(true);
+      combobox.valueProperty().bindBidirectional(bigJavaFont);
+
+      combobox.valueProperty().addListener(new ChangeListener() {
+          @Override
+          public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+              if(!combobox.getItems().contains(newValue) && javafx.scene.text.Font.getFamilies().contains(newValue)){
+                  combobox.getItems().add(newValue);
+              }
+          }
+      });
+
+      return combobox;
+  }
+
   private HBox createSettingsMenu(Slider slider, CheckBox[] checkBoxes){
       HBox line_0 = new HBox(createFontSizeLabel(slider));
       line_0.setAlignment(Pos.CENTER);
-      ComboBox fontBox = new ComboBox(FXCollections.observableArrayList("Serif", "SansSerif", "Monospaced"));
-      fontBox.setEditable(true);
-      fontBox.valueProperty().bindBidirectional(bigJavaFont);
-      HBox line_1 = new HBox(fontBox);
+      HBox line_1 = new HBox(createCombobox());
       line_1.setAlignment(Pos.CENTER);
       line_1.setPadding(new Insets(15.0D, 50.0D, 15.0D, 50.0D));
       HBox line_2 = new HBox(checkBoxes[0], checkBoxes[1]);
@@ -176,10 +201,6 @@ public class FontViewer extends Application {
   }
 
   public void start(Stage primaryStage) throws Exception {
-
-    //combobox with diffrent fonts. todo binding to menu mFace
-    ComboBox fontBox = new ComboBox(FXCollections.observableArrayList("Serif", "SansSerif", "Monospaced"));
-    fontBox.setEditable(true);
 
     //create rootPane
     BorderPane center = new BorderPane();
