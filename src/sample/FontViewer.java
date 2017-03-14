@@ -36,6 +36,7 @@ public class FontViewer extends Application {
   private Menu mFace = new Menu("Face");
   private ToggleGroup radioItemGroup = new ToggleGroup();
 
+
   private Label createBigJavaLabel(){
     Label label = new Label("BigJava");
     bigJavaSize.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(bigJavaFont.getValue(), FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()),(double)newValue)));
