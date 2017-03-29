@@ -37,12 +37,30 @@ public class FontViewer extends Application {
   private ToggleGroup radioItemGroup = new ToggleGroup();
 
 
-  private Label createBigJavaLabel(){
+  private Label createBigJavaLabel(Stage primarystage){
+
     Label label = new Label("BigJava");
-    bigJavaSize.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(bigJavaFont.getValue(), FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()),(double)newValue)));
-    bigJavaBold.addListener(((observable, oldValue, newValue) -> label.setFont(Font.font(bigJavaFont.getValue(), FontWeight.findByName(newValue),FontPosture.findByName(bigJavaItalic.getValue()), bigJavaSize.getValue()))));
-    bigJavaItalic.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(bigJavaFont.getValue(), FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(newValue), bigJavaSize.getValue())));
-    bigJavaFont.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(newValue, FontWeight.findByName(bigJavaBold.getValue()), FontPosture.findByName(bigJavaItalic.getValue()), bigJavaSize.getValue())));
+
+    bigJavaSize.addListener(new ChangeListener<Number>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            label.setFont(Font.font(bigJavaFont.getValue(), FontWeight.findByName(bigJavaBold.getValue()),FontPosture.findByName(bigJavaItalic.getValue()),(double)newValue));
+            primarystage.sizeToScene();
+        }
+    });
+    bigJavaBold.addListener(((observable, oldValue, newValue) -> label.setFont(Font.font(bigJavaFont.getValue(),
+            FontWeight.findByName(newValue),
+            FontPosture.findByName(bigJavaItalic.getValue()),
+            bigJavaSize.getValue()))));
+    bigJavaItalic.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(bigJavaFont.getValue(),
+            FontWeight.findByName(bigJavaBold.getValue()),
+            FontPosture.findByName(newValue),
+            bigJavaSize.getValue())));
+    bigJavaFont.addListener((observable, oldValue, newValue) -> label.setFont(Font.font(newValue,
+            FontWeight.findByName(bigJavaBold.getValue()),
+            FontPosture.findByName(bigJavaItalic.getValue()),
+            bigJavaSize.getValue())));
+
     return label;
   }
 
@@ -111,16 +129,17 @@ public class FontViewer extends Application {
       return hBox;
   }
 
-  private BorderPane createRootpane(){
-    Slider slider = createSlider();
-    CheckBox[] checkBoxes = createCheckBoxes();
-    MenuBar menuBar = createMenuBar(checkBoxes);
+  private BorderPane createRootpane() {
 
-    BorderPane rootPane = new BorderPane();
-    rootPane.setBottom(createSettingsMenu(slider, checkBoxes));
-    rootPane.setTop(menuBar);
+      Slider slider = createSlider();
+      CheckBox[] checkBoxes = createCheckBoxes();
+      MenuBar menuBar = createMenuBar(checkBoxes);
 
-    return rootPane;
+      BorderPane rootPane = new BorderPane();
+      rootPane.setBottom(createSettingsMenu(slider, checkBoxes));
+      rootPane.setTop(menuBar);
+
+      return rootPane;
   }
 
   private CheckBox[] createCheckBoxes(){
@@ -217,9 +236,9 @@ public class FontViewer extends Application {
 
     //create rootPane
     BorderPane center = new BorderPane();
-    center.setCenter(createBigJavaLabel());
+    center.setCenter(createBigJavaLabel(primaryStage));
     center.setRight(createImage());
-    center.setPadding(new Insets(0.0D, 0.0D, 25.0D, 0.0D));
+    center.setPadding(new Insets(10.0D, 10.0D, 25.0D, 0.0D));
 
     BorderPane rootPane = createRootpane();
     rootPane.setCenter(center);
